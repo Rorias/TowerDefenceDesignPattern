@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -15,17 +16,17 @@ public class FollowLine : MonoBehaviour
     private int currentWayPoint = 0;
     public int health;
 
-    void Start()
+    private void Start()
     {
         spawnscript = GameObject.Find("Wave Spawner").GetComponent<SpawnWave>();
         GetStats = GameObject.Find("Stats Manager").GetComponent<StatsManager>();
-        if (gameObject.name == GetStats.Enemies[StatsManager.Enemynames.thief].Name) GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Enemies/Runner");       
-        else  GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Enemies/guay");
+        if (gameObject.name == GetStats.Enemies[StatsManager.Enemynames.thief].Name) GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Enemies/Runner");
+        else GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Enemies/guay");
         name = GetStats.Enemies[thisEnemy].Name;
         health = GetStats.Enemies[thisEnemy].MaxHealth;
     }
 
-    void Update()
+    private void Update()
     {
         Vector2 wayPointDirection = new Vector2(spawnscript.wps[currentWayPoint].x - transform.position.x, spawnscript.wps[currentWayPoint].y - transform.position.y);
 
@@ -40,7 +41,7 @@ public class FollowLine : MonoBehaviour
         }
     }
 
-    void OnCollisionEnter2D(Collision2D other)
+    private void OnCollisionEnter2D(Collision2D other)
     {
         if (other.gameObject.tag == "Enemy")
         {

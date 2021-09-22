@@ -9,11 +9,13 @@ using UnityEditor;
 
 public class SpawnWave : MonoBehaviour
 {
+    private ObjectPool<Enemy> enemyPool;
+
+
     private StatsManager SetStats;
-    public List<GameObject> Enemies = null;
+    public List<Enemy> Enemies = null;
     public List<Vector2> wps = null;
     public GameObject Enemy;
-    private GameObject clone;
 
     private int enemiesSpawned = 0;
     public int EnemyCount = 0;
@@ -27,7 +29,7 @@ public class SpawnWave : MonoBehaviour
 
     public void StartWave()
     {
-        Enemies = new List<GameObject>();
+        Enemies = new List<Enemy>();
         Destroy(GameObject.Find("Tutorial"));
         GameObject.Find("Start").GetComponent<Button>().enabled = false;
         waveStarted = true;
@@ -44,6 +46,16 @@ public class SpawnWave : MonoBehaviour
         nextWaveIn = 10 + SetStats.WaveCount * 2;
         maxnextWaveIn = nextWaveIn;
         GameObject.Find("Start").GetComponent<Image>().fillAmount = 1;
+    }
+
+    private void Awake()
+    {
+        enemyPool = new ObjectPool<Enemy>();
+    }
+
+    public void OnEnemyDead(Enemy _enemy)
+    {
+        enemyPool.ReturnObjectToPool(_enemy);
     }
 
     void Start()
@@ -119,23 +131,25 @@ public class SpawnWave : MonoBehaviour
 
     private void CreateEnemies()
     {
-        clone = (GameObject)Instantiate(Enemy, transform.position, Quaternion.identity);
-        Enemies.Add(clone);
+        Enemy enemy = enemyPool.RequestObject();
+        enemy.OnDie += OnEnemyDead;
+
+        Enemies.Add(enemy);
         nextEnemyIn = 1f;
 
         switch (SetStats.WaveCount)
         {
             case 1:
-                EnemyCreation(StatsManager.Enemynames.man);
+                EnemyCreation(enemy, StatsManager.Enemynames.man);
                 break;
             case 2:
                 switch (enemiesSpawned)
                 {
                     case 4:
-                        EnemyCreation(StatsManager.Enemynames.soldier);
+                        EnemyCreation(enemy, StatsManager.Enemynames.soldier);
                         break;
                     default:
-                        EnemyCreation(StatsManager.Enemynames.man);
+                        EnemyCreation(enemy, StatsManager.Enemynames.man);
                         break;
                 }
                 break;
@@ -145,10 +159,10 @@ public class SpawnWave : MonoBehaviour
                     case 4:
                     case 5:
                     case 6:
-                        EnemyCreation(StatsManager.Enemynames.thief);
+                        EnemyCreation(enemy, StatsManager.Enemynames.thief);
                         break;
                     default:
-                        EnemyCreation(StatsManager.Enemynames.man);
+                        EnemyCreation(enemy, StatsManager.Enemynames.man);
                         break;
                 }
                 break;
@@ -156,15 +170,15 @@ public class SpawnWave : MonoBehaviour
                 switch (enemiesSpawned)
                 {
                     case 3:
-                        EnemyCreation(StatsManager.Enemynames.armysoldier);
+                        EnemyCreation(enemy, StatsManager.Enemynames.armysoldier);
                         break;
                     case 6:
                     case 7:
                     case 8:
-                        EnemyCreation(StatsManager.Enemynames.hippie);
+                        EnemyCreation(enemy, StatsManager.Enemynames.hippie);
                         break;
                     default:
-                        EnemyCreation(StatsManager.Enemynames.man);
+                        EnemyCreation(enemy, StatsManager.Enemynames.man);
                         break;
                 }
                 break;
@@ -172,10 +186,10 @@ public class SpawnWave : MonoBehaviour
                 switch (enemiesSpawned)
                 {
                     case 10:
-                        EnemyCreation(StatsManager.Enemynames.executioner);
+                        EnemyCreation(enemy, StatsManager.Enemynames.executioner);
                         break;
                     default:
-                        EnemyCreation(StatsManager.Enemynames.man);
+                        EnemyCreation(enemy, StatsManager.Enemynames.man);
                         break;
                 }
                 break;
@@ -183,19 +197,19 @@ public class SpawnWave : MonoBehaviour
                 switch (enemiesSpawned)
                 {
                     case 12:
-                        EnemyCreation(StatsManager.Enemynames.bob);
+                        EnemyCreation(enemy, StatsManager.Enemynames.bob);
                         break;
                     default:
-                        EnemyCreation(StatsManager.Enemynames.man);
+                        EnemyCreation(enemy, StatsManager.Enemynames.man);
                         break;
                 }
                 break;
         }
     }
 
-    private void EnemyCreation(StatsManager.Enemynames enemyname)
+    private void EnemyCreation(Enemy enemy, StatsManager.Enemynames enemyname)
     {
-        clone.GetComponent<FollowLine>().thisEnemy = enemyname;
+        enemy.enemy.GetComponent<FollowLine>().thisEnemy = enemyname;
     }
 
     private void CreateSceneWayPoints()
@@ -219,7 +233,7 @@ public class SpawnWave : MonoBehaviour
                 break;
             case "Level 1":
                 SetStats.MaxWaves = 30;
-                
+
                 break;
         }
     }

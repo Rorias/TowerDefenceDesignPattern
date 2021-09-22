@@ -10,13 +10,13 @@ using UnityEditor;
 public class CheckArrowColl : MonoBehaviour
 {
     private GameObject Enemy;
-    private SpawnWave spawnscript;
+    private SpawnWave spawnWave;
     private StatsManager SetStats;
     private List<GameObject> enemies = new List<GameObject>();
 
     void Start()
     {
-        spawnscript = GameObject.Find("Wave Spawner").GetComponent<SpawnWave>();
+        spawnWave = GameObject.Find("Wave Spawner").GetComponent<SpawnWave>();
         Enemy = gameObject.GetComponentInParent<ShootEnemy>().TargetEnemy;
         SetStats = GameObject.Find("Stats Manager").GetComponent<StatsManager>();
     }
@@ -85,11 +85,13 @@ public class CheckArrowColl : MonoBehaviour
 
         if (enemy.GetComponent<FollowLine>().health <= 0)
         {
-            Destroy(enemy);
+            Enemy toDestroy = spawnWave.Enemies.Find(x => x.enemy == enemy);
+            toDestroy.Die();
+            //Destroy(enemy);
             SetStats.ExpCount += SetStats.Enemies[thisTowersEnemy].ExpWorth;
             SetStats.GoldCount += SetStats.Enemies[thisTowersEnemy].GoldWorth;
-            spawnscript.EnemyCount--;
-            spawnscript.Enemies.Remove(enemy);
+            spawnWave.EnemyCount--;
+            spawnWave.Enemies.Remove(toDestroy);
         }
     }
 }

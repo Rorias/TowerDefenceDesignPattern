@@ -10,17 +10,17 @@ using UnityEditor;
 public class MapDetections : MonoBehaviour
 {
     private StatsManager SetStats;
-    private SpawnWave spawnscript;
+    private SpawnWave spawnWave;
 
     void Start()
     {
-        spawnscript = GameObject.Find("Wave Spawner").GetComponent<SpawnWave>();
+        spawnWave = GameObject.Find("Wave Spawner").GetComponent<SpawnWave>();
         SetStats = GameObject.Find("Stats Manager").GetComponent<StatsManager>();
     }
 
     void FixedUpdate()
     {
-        RaycastHit2D raycast2D = Physics2D.Linecast(Vector2.zero, Vector2.zero);     
+        RaycastHit2D raycast2D = Physics2D.Linecast(Vector2.zero, Vector2.zero);
 
         if (SceneManager.GetActiveScene().name == "Tutorial")
         {
@@ -37,9 +37,9 @@ public class MapDetections : MonoBehaviour
         {
             if (raycast2D.collider.gameObject.tag == "Enemy")
             {
-                spawnscript.Enemies.Remove(raycast2D.collider.gameObject);
-                spawnscript.EnemyCount--;
-                SetStats.LifeCount -= SetStats.Enemies[raycast2D.collider.gameObject.GetComponent<FollowLine>().thisEnemy].LivesLost;               
+                spawnWave.Enemies.Remove(spawnWave.Enemies.Find(x => x.enemy == raycast2D.collider.gameObject));
+                spawnWave.EnemyCount--;
+                SetStats.LifeCount -= SetStats.Enemies[raycast2D.collider.gameObject.GetComponent<FollowLine>().thisEnemy].LivesLost;
                 Destroy(raycast2D.collider.gameObject);
             }
         }

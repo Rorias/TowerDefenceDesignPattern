@@ -45,7 +45,7 @@ public class ShootEnemy : MonoBehaviour
         if (pos < 3)
         {
             GetStats = GameObject.Find("Stats Manager").GetComponent<StatsManager>().Towers[placetower.towerPlacedName[pos]];
-            TargetEnemy = GameObject.Find("Wave Spawner").GetComponent<SpawnWave>().Enemies.Find((x) => Vector2.Distance(transform.position, x.transform.position) < GetStats.Range);
+            TargetEnemy = GameObject.Find("Wave Spawner").GetComponent<SpawnWave>().Enemies.Find((x) => Vector2.Distance(transform.position, x.enemy.transform.position) < GetStats.Range).enemy;
         }
 
         if (TargetEnemy != null && name.Any(char.IsDigit) && placetower.towerPlaced)
