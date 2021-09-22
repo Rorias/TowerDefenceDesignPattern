@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: a57577fd93388e343a53f04e33659a2d
+timeCreated: 1493572225
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - arrow: {fileID: 1000012172634378, guid: f02c9a900e5c4344b9bc5d74b00151dd, type: 2}
+  - magicbolt: {fileID: 1000012732190664, guid: 0819a6e3242ec594da9e02805c7af556,
+      type: 2}
+  - TargetEnemy: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
